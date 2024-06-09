@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Sofia Sights</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/custom.css">
+</head>
+<body data-new-gr-c-s-check-loaded="14.1179.0" data-gr-ext-installed="">
+     
+<!--Navbar start-->
+<nav class="navbar navbar-expand-lg navbar-light" style="background-color: #e13a9d;">
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarText">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item active">
+                <a class="nav-link" href="#"><span class="nav-link">Home</span></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#"><span class="nav-link">Calendar</span></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#"><span class="nav-link">Map</span></a>
+            </li>
+        </ul>
+    </div>
+</nav>
+<!--Navbar end-->
+
+<!--Header starts-->
+<div id="carouselExample" class="carousel slide" style="height:400px;">
+    <div class="carousel-inner">
+        <div class="carousel-item active">
+            <img src="img/Sofia.png" class="d-block w-100" alt="...">
+        </div>
+    </div>
+</div>
+<!--Header ends-->
+
+<!--calendar of events start-->
+<section class="ftco-section">
+    <div class="container-fluid">
+        <div class="row">
+            <!-- start calendar-->
+            <div class="col-md-4">           
+                <div class="container ">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="elegant-calencar d-md-flex">
+                                <div class="wrap-header d-flex align-items-center img" style="background-image: url(images/bg.jpg);">
+                                    <p id="reset">Today</p>
+                                    <div id="header" class="p-0">
+                                        <div class="head-info">
+                                            <div class="head-month">June - 2024</div>
+                                            <div class="head-day">11</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="calendar-wrap">
+                                    <div class="w-100 button-wrap">
+                                        <div class="pre-button d-flex align-items-center justify-content-center"><i class="fa fa-chevron-left"></i></div>
+                                        <div class="next-button d-flex align-items-center justify-content-center"><i class="fa fa-chevron-right"></i></div>
+                                    </div>
+                                    <table id="calendar">
+                                        <thead>
+                                            <tr>
+                                                <th>Sun</th>
+                                                <th>Mon</th>
+                                                <th>Tue</th>
+                                                <th>Wed</th>
+                                                <th>Thu</th>
+                                                <th>Fri</th>
+                                                <th>Sat</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td id="disabled" class=""></td>
+                                                <td id="disabled" class=""></td>
+                                                <td id="disabled" class=""></td>
+                                                <td id="disabled" class=""></td>
+                                                <td id="disabled" class=""></td>
+                                                <td id="disabled" class=""></td>
+                                                <td id="" class="">1</td>
+                                            </tr>
+                                            <tr>
+                                                <td id="" class="">2</td>
+                                                <td id="" class="">3</td>
+                                                <td id="" class="">4</td>
+                                                <td id="" class="">5</td>
+                                                <td id="" class="">6</td>
+                                                <td id="" class="">7</td>
+                                                <td id="" class="">8</td>
+                                            </tr>
+                                            <tr>
+                                                <td id="today" class="">9</td>
+                                                <td id="" class="">10</td>
+                                                <td id="" class="selected">11</td>
+                                                <td id="" class="">12</td>
+                                                <td id="" class="">13</td>
+                                                <td id="" class="">14</td>
+                                                <td id="" class="">15</td>
+                                            </tr>
+                                            <tr>
+                                                <td id="" class="">16</td>
+                                                <td id="" class="">17</td>
+                                                <td id="" class="">18</td>
+                                                <td id="" class="">19</td>
+                                                <td id="" class="">20</td>
+                                                <td id="" class="">21</td>
+                                                <td id="" class="">22</td>
+                                            </tr>
+                                            <tr>
+                                                <td id="" class="">23</td>
+                                                <td id="" class="">24</td>
+                                                <td id="" class="">25</td>
+                                                <td id="" class="">26</td>
+                                                <td id="" class="">27</td>
+                                                <td id="" class="">28</td>
+                                                <td id="" class="">29</td>
+                                            </tr>
+                                            <tr>
+                                                <td id="" class="">30</td>
+                                                <td id="disabled" class=""></td>
+                                                <td id="disabled" class=""></td>
+                                                <td id="disabled" class=""></td>
+                                                <td id="disabled" class=""></td>
+                                                <td id="disabled" class=""></td>
+                                                <td id="disabled" class=""></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- end calendar -->
+            <div class="col-md-8 gallery-box">
+                <div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
+                    <div class="carousel-inner">
+                        <div class="carousel-item active">
+                            <div class="container-fluid">
+                                <div class="row">
+                                    <div class="col-md-2 offset-md-2">
+                                        <center>
+                                            <img src="img/joke.png" class="cal-event-img">
+                                            <p>Comedy standup</p>
+                                        </center>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <center>
+                                            <img src="img/kpop.png" class="cal-event-img">
+                                            <p>Kpop night</p>
+                                        </center>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <center>
+                                            <img class="cal-event-img">
+                                            <p>event name here</p>
+                                        </center>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <center>
+                                            <img class="cal-event-img">
+                                            <p>event name here</p>
+                                        </center>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-2 offset-md-2">
+                                        <center>
+                                            <img class="cal-event-img">
+                                            <p>event name here</p>
+                                        </center>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <center>
+                                            <img class="cal-event-img">
+                                            <p>event name here</p>
+                                        </center>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <center>
+                                            <img class="cal-event-img">
+                                            <p>event name here</p>
+                                        </center>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <center>
+                                            <img class="cal-event-img">
+                                            <p>event name here</p>
+                                        </center>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="carousel-item">
+                            <div class="container-fluid">
+                                <div class="row">
+                                    <div class="col-md-2 offset-md-2">
+                                        <center>
+                                            <img class="cal-event-img">
+                                            <p>event name here</p>
+                                        </center>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <center>
+                                            <img class="cal-event-img">
+                                            <p>event name here</p>
+                                        </center>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <center>
+                                            <img class="cal-event-img">
+                                            <p>event name here</p>
+                                        </center>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <center>
+                                            <img class="cal-event-img">
+                                            <p>event name here</p>
+                                        </center>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-2 offset-md-2">
+                                        <center>
+                                            <img class="cal-event-img">
+                                            <p>event name here</p>
+                                        </center>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <center>
+                                            <img class="cal-event-img">
+                                            <p>event name here</p>
+                                        </center>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <center>
+                                            <img class="cal-event-img">
+                                            <p>event name here</p>
+                                        </center>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <center>
+                                            <img class="cal-event-img">
+                                            <p>event name here</p>
+                                        </center>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="sr-only">Previous</span>
+                    </a>
+                    <a class="carousel-control-next" href="#carouselExampleControls" role="button" data-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="sr-only">Next</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!--calendar of events end-->
+
+<!-- Map section start -->
+<div style="margin: 50px 20px;">
+    <div id="map" style="height: 600px;"></div>
+    <div>
+        <div id="filter-buttons">
+            <button class="filter-button" onclick="toggleMarkers('gallery')">Show Galleries</button>
+            <button class="filter-button" onclick="toggleMarkers('theatre')">Show Theatres</button>
+            <button class="filter-button" onclick="toggleMarkers('museum')">Show Museums</button>
+            <button class="filter-button" onclick="showAllMarkers()">Show All</button>
+        </div>
+    </div>
+</div>
+<!-- Map section end -->
+
+<!--Footer start-->
+<div class="container">
+    <footer class="d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top">
+        <div class="col-md-4 d-flex align-items-center">
+            <a href="https://github.com/manoldzhermanski/Sofia-Cultural-Sights-and-Events/tree/main" class="mb-3 me-2 mb-md-0 text-body-secondary text-decoration-none lh-1">
+                <img src="img/github.png" id="github-icon">
+            </a>
+            <span class="mb-3 mb-md-0 text-body-secondary">Developed by Manol Dzhermanski</span>
+        </div>
+    </footer>
+</div>
+<!--Footer end-->
+
+<script src="js/jquery.min.js"></script>
+<script src="js/popper.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/main.js"></script>
+<script defer src="https://static.cloudflareinsights.com/beacon.min.js/vcd15cbe7772f49c399c6a5babf22c1241717689176015" integrity="sha512-ZpsOmlRQV6y907TI0dKBHq9Md29nnaEIPlkf84rnaERnq6zvWvPUqr2ft8M1aS28oN72PdrCzSjY4U6VaAw1EQ==" data-cf-beacon="{&quot;rayId&quot;:&quot;8910c9aacbc93132&quot;,&quot;version&quot;:&quot;2024.4.1&quot;,&quot;token&quot;:&quot;cd0b4b3a733644fc843ef0b185f98241&quot;}" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+<script src="js/map.js"></script>
+
+</body>
+</html>

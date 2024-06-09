@@ -1,0 +1,22 @@
+.carousel-inner{
+    background-color:#e13a9d;
+}
+.cal-event-img
+{
+    height: 150px;
+    width: 150px;
+    background-color: lightgray;
+    margin-top: 20px;
+}
+p{
+    color: black;
+    font-family: Helvetica, sans-serif;
+}
+.nav-link{
+    color: white;
+}
+#github-icon{
+    height: 30px;
+    width: 30px;
+    margin-right: 20px;
+}
