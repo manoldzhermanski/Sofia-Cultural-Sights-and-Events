@@ -34,36 +34,36 @@ var theatreLayer = L.layerGroup();
 var museumLayer = L.layerGroup();
 
 // Load and add galleries
-fetch('json/galleries.json')
+fetch('http://localhost:3000/galleries')
 .then(response => response.json())
 .then(data => {
     data.galleries.forEach(point => {
         var marker = L.marker([point.latitude, point.longitude], { icon: galleryIcon })
-            .bindPopup(point.gallery);
+            .bindPopup(point.gallery); // Assuming your table has a 'name' column
         galleryLayer.addLayer(marker);
     });
     galleryLayer.addTo(map); // Add galleryLayer to the map after loading
 });
 
 // Load and add theatres
-fetch('json/theatres.json')
+fetch('http://localhost:3000/theatres')
 .then(response => response.json())
 .then(data => {
     data.theatres.forEach(point => {
         var marker = L.marker([point.latitude, point.longitude], { icon: theatreIcon })
-            .bindPopup(point.theatre);
+            .bindPopup(point.theatre); // Assuming your table has a 'name' column
         theatreLayer.addLayer(marker);
     });
     theatreLayer.addTo(map); // Add theatreLayer to the map after loading
 });
 
 // Load and add museums
-fetch('json/museums.json')
+fetch('http://localhost:3000/museums')
 .then(response => response.json())
 .then(data => {
     data.museums.forEach(point => {
         var marker = L.marker([point.latitude, point.longitude], { icon: museumIcon })
-            .bindPopup(point.museum);
+            .bindPopup(point.museum); // Assuming your table has a 'name' column
         museumLayer.addLayer(marker);
     });
     museumLayer.addTo(map); // Add museumLayer to the map after loading
