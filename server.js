@@ -50,6 +50,16 @@ app.get('/museums', async (req, res) => {
     }
 });
 
+app.get('/events', async (req, res) => {
+    try {
+        const result = await pool.query('SELECT * FROM midzherman_work.events');
+        res.json({ events: result.rows });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+
 // Serve index.html for the root path
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'Sofia_Sights', 'index.html'));
