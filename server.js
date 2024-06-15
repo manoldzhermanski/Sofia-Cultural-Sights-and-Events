@@ -51,14 +51,25 @@ app.get('/museums', async (req, res) => {
 });
 
 app.get('/events', async (req, res) => {
+    const { date } = req.query;
+
+    if (!date) {
+        return res.status(400).json({ error: 'Date is required' });
+    }
+
     try {
-        const result = await pool.query('SELECT * FROM midzherman_work.events');
-        res.json({ events: result.rows });
+        const result = await pool.query(`
+            SELECT * FROM midzherman_work.events
+            WHERE $1::date BETWEEN starting_date AND ending_date
+        `, [date]);
+
+        res.json({ activeEvents: result.rows });
     } catch (err) {
         console.error(err);
         res.status(500).json({ error: 'Internal Server Error' });
     }
 });
+
 
 // Serve index.html for the root path
 app.get('/', (req, res) => {
