@@ -59,8 +59,9 @@ app.get('/events', async (req, res) => {
 
     try {
         const result = await pool.query(`
-            SELECT * FROM midzherman_work.events
-            WHERE $1::date BETWEEN starting_date AND ending_date
+            SELECT *
+            FROM midzherman_work.events
+            WHERE $1::date BETWEEN starting_date::date AND ending_date::date
         `, [date]);
 
         res.json({ activeEvents: result.rows });
