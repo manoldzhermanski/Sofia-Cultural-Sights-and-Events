@@ -45,12 +45,11 @@ function populateCarousel(events) {
     for (let i = 0; i < numOfChunks; i++) {
         const chunk = events.slice(i * chunkSize, (i + 1) * chunkSize);
         const isActive = i === 0 ? 'active' : '';
-
         // Generate the inner HTML for the carousel item
         let carouselItemContent = '';
         for (let j = 0; j < chunk.length; j++) {
             const event = chunk[j];
-            const offsetClass = j % 4 === 0 && j >= 4 ? 'offset-md-2' : '';
+            const offsetClass = j % 4 === 0 ? 'offset-md-2' : '';
             const imgSrc = event.img ? `data:image/jpeg;base64,${event.img}` : 'default-image.png';
             carouselItemContent += `
                 <div class="col-md-2 ${offsetClass}">
