@@ -50,7 +50,7 @@ function populateCarousel(events) {
         for (let j = 0; j < chunk.length; j++) {
             const event = chunk[j];
             const offsetClass = j % 4 === 0 ? 'offset-md-2' : '';
-            const imgSrc = event.img ? `data:image/jpeg;base64,${event.img}` : 'default-image.png';
+            const imgSrc = event.img ? `data:image/jpeg;base64,${event.img}` : 'img/default-image.png';
             carouselItemContent += `
                 <div class="col-md-2 ${offsetClass}">
                     <center>
