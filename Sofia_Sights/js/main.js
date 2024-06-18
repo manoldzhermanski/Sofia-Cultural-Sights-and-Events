@@ -140,6 +140,20 @@
         this.options = undefined;
         this.drawHeader(day);
         this.drawDays();
+        
+        // Array of month names
+        const monthNames = [
+            "January", "February", "March", "April", "May", "June", 
+            "July", "August", "September", "October", "November", "December"
+        ];
+
+        // Get the month name with the first letter capitalized
+        let monthName = monthNames[month];
+
+        // Create the monthYear string in the desired format
+        const monthYear = `${monthName} - ${year}`;
+        const dayString = day.toString().padStart(2, '0');
+        fetchEvents(dayString, monthYear);
     };
 
     Calendar.prototype.setCookie = function(name, expiredays) {

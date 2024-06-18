@@ -3,13 +3,16 @@ $(document).ready(function(){
     $(document).on('click', '.date-cell, .selected', function(){
         const selectedDate = $(this).text().trim(); // Get the date number
         const monthYear = $('.head-month').text().trim(); // Get the month and year
-        
         fetchEvents(selectedDate, monthYear);
     });
 });
 
 function fetchEvents(selectedDate, monthYear) {
     const [month, year] = monthYear.split(' - ');
+    console.log(month);
+    console.log(year);
+    console.log(selectedDate);
+    console.log(monthYear);
     const fullDate = `${year}-${getMonthNumber(month)}-${selectedDate.padStart(2, '0')}`;
 
     console.log('Full date:', fullDate);
