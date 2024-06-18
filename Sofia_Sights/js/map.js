@@ -33,6 +33,11 @@ var galleryLayer = L.layerGroup();
 var theatreLayer = L.layerGroup();
 var museumLayer = L.layerGroup();
 
+// Event marker layers for events on specific dates
+var eventGalleryLayer = L.layerGroup();
+var eventTheatreLayer = L.layerGroup();
+var eventMuseumLayer = L.layerGroup();
+
 // Load and add galleries
 fetch('http://localhost:3000/galleries')
 .then(response => response.json())
@@ -91,11 +96,12 @@ function fetchLocationDetails(event, icon, layer) {
             .then(data => {
                 if (data) {
                     let locations = data[property];
-                    let location = locations.find(loc => loc.name === event.hosted_by || loc.name === event.hosted_by);
+                    let location = locations.find(loc => loc.name === event.hosted_by);
                     if (location) {
                         let marker = L.marker([location.latitude, location.longitude], { icon: icon })
                             .bindPopup(location.name);
                         layer.addLayer(marker);
+                        layer.addTo(map);
                     }
                 } else {
                     console.error(`Property ${property} not found in response data`);
@@ -107,45 +113,98 @@ function fetchLocationDetails(event, icon, layer) {
 
 // Function to update map markers based on events
 function updateMapWithEvents(events) {
-    // Clear existing layers
+    // Clear existing event layers
+    eventGalleryLayer.clearLayers();
+    eventTheatreLayer.clearLayers();
+    eventMuseumLayer.clearLayers();
     galleryLayer.clearLayers();
-    theatreLayer.clearLayers();
     museumLayer.clearLayers();
+    theatreLayer.clearLayers();
 
     // Process each event and fetch location details
     events.forEach(event => {
         if (event.host_type === 'gallery') {
-            fetchLocationDetails(event, galleryIcon, galleryLayer);
+            fetchLocationDetails(event, galleryIcon, eventGalleryLayer);
         } else if (event.host_type === 'theatre') {
-            fetchLocationDetails(event, theatreIcon, theatreLayer);
+            fetchLocationDetails(event, theatreIcon, eventTheatreLayer);
         } else if (event.host_type === 'museum') {
-            fetchLocationDetails(event, museumIcon, museumLayer);
+            fetchLocationDetails(event, museumIcon, eventMuseumLayer);
         }
     });
 
-    // Show relevant layers on the map
-    if (galleryLayer.getLayers().length > 0) map.addLayer(galleryLayer);
-    if (theatreLayer.getLayers().length > 0) map.addLayer(theatreLayer);
-    if (museumLayer.getLayers().length > 0) map.addLayer(museumLayer);
+    // Show relevant event layers on the map
+    if (eventGalleryLayer.getLayers().length > 0) map.addLayer(eventGalleryLayer);
+    if (eventTheatreLayer.getLayers().length > 0) map.addLayer(eventTheatreLayer);
+    if (eventMuseumLayer.getLayers().length > 0) map.addLayer(eventMuseumLayer);
 
     // Fit map to markers
     setTimeout(() => {
-        let allMarkers = L.featureGroup([...galleryLayer.getLayers(), ...theatreLayer.getLayers(), ...museumLayer.getLayers()]);
+        let allMarkers = L.featureGroup([...eventGalleryLayer.getLayers(), ...eventTheatreLayer.getLayers(), ...eventMuseumLayer.getLayers()]);
         if (allMarkers.getLayers().length > 0) {
             map.fitBounds(allMarkers.getBounds());
         }
     }, 500); // Add a delay to ensure all markers are added before fitting bounds
 }
+
 var currentLayer = null;
+
+// Function to fetch and add markers for a specific category
+function fetchCategoryMarkers(category) {
+    let url;
+    let icon;
+    let layer;
+
+    if (category === 'galleries') {
+        url = `http://localhost:3000/galleries`;
+        icon = galleryIcon;
+        layer = galleryLayer;
+    } else if (category === 'theatres') {
+        url = `http://localhost:3000/theatres`;
+        icon = theatreIcon;
+        layer = theatreLayer;
+    } else if (category === 'museums') {
+        url = `http://localhost:3000/museums`;
+        icon = museumIcon;
+        layer = museumLayer;
+    }
+
+    if (url) {
+        fetch(url)
+            .then(response => response.json())
+            .then(data => {
+                layer.clearLayers(); // Clear existing markers in the layer
+                data[category].forEach(point => {
+                    let marker = L.marker([point.latitude, point.longitude], { icon: icon })
+                        .bindPopup(point.name);
+                    layer.addLayer(marker);
+                });
+                if (!map.hasLayer(layer)) {
+                    map.addLayer(layer);
+                }
+            })
+            .catch(error => console.error('Error fetching category markers:', error));
+    }
+}
 
 // Function to toggle marker visibility by category
 function toggleMarkers(category) {
-    var layer;
-    if (category === 'gallery') {
+    // Remove event layers
+    if (map.hasLayer(eventGalleryLayer)) {
+        map.removeLayer(eventGalleryLayer);
+    }
+    if (map.hasLayer(eventTheatreLayer)) {
+        map.removeLayer(eventTheatreLayer);
+    }
+    if (map.hasLayer(eventMuseumLayer)) {
+        map.removeLayer(eventMuseumLayer);
+    }
+
+    let layer;
+    if (category === 'galleries') {
         layer = galleryLayer;
-    } else if (category === 'theatre') {
+    } else if (category === 'theatres') {
         layer = theatreLayer;
-    } else if (category === 'museum') {
+    } else if (category === 'museums') {
         layer = museumLayer;
     }
 
@@ -162,21 +221,34 @@ function toggleMarkers(category) {
         if (map.hasLayer(museumLayer)) {
             map.removeLayer(museumLayer);
         }
-        map.addLayer(layer);
+        fetchCategoryMarkers(category);
         currentLayer = layer;
     }
+
+    // Fit map to markers
+    setTimeout(() => {
+        let allMarkers = L.featureGroup([...galleryLayer.getLayers(), ...theatreLayer.getLayers(), ...museumLayer.getLayers()]);
+        if (allMarkers.getLayers().length > 0) {
+            map.fitBounds(allMarkers.getBounds());
+        }
+    }, 500); // Add a delay to ensure all markers are added before fitting bounds
 }
 
 // Function to show all markers
 function showAllMarkers() {
-    if (!map.hasLayer(galleryLayer)) {
-        map.addLayer(galleryLayer);
-    }
-    if (!map.hasLayer(theatreLayer)) {
-        map.addLayer(theatreLayer);
-    }
-    if (!map.hasLayer(museumLayer)) {
-        map.addLayer(museumLayer);
-    }
+    fetchCategoryMarkers('galleries');
+    fetchCategoryMarkers('theatres');
+    fetchCategoryMarkers('museums');
     currentLayer = null;
+
+    // Fit map to markers
+    setTimeout(() => {
+        let allMarkers = L.featureGroup([...galleryLayer.getLayers(), ...theatreLayer.getLayers(), ...museumLayer.getLayers()]);
+        if (allMarkers.getLayers().length > 0) {
+            map.fitBounds(allMarkers.getBounds());
+        }
+    }, 500); // Add a delay to ensure all markers are added before fitting bounds
 }
+
+// Initial load of all markers
+showAllMarkers();
