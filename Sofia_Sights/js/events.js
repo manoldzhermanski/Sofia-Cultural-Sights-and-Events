@@ -39,24 +39,48 @@ function populateCarousel(events) {
     const carouselInner = $('.carousel-inner');
     carouselInner.empty(); // Clear any existing items
 
-    const chunkSize = 8;
+    const chunkSize = 8; // 4 events per row, 2 rows per chunk
     const numOfChunks = Math.ceil(events.length / chunkSize);
 
     for (let i = 0; i < numOfChunks; i++) {
         const chunk = events.slice(i * chunkSize, (i + 1) * chunkSize);
         const isActive = i === 0 ? 'active' : '';
-        // Generate the inner HTML for the carousel item
+        
         let carouselItemContent = '';
-        for (let j = 0; j < chunk.length; j++) {
-            const event = chunk[j];
-            const offsetClass = j % 4 === 0 ? 'offset-md-2' : '';
-            const imgSrc = event.img ? `data:image/jpeg;base64,${event.img}` : 'img/default-image.png';
+        
+        // Create two rows
+        for (let row = 0; row < 2; row++) {
+            let rowContent = '';
+            for (let j = 0; j < 4; j++) {
+                const eventIndex = row * 4 + j;
+                const event = chunk[eventIndex];
+                const offsetClass = j % 4 === 0 ? 'offset-md-2' : '';
+
+                if (event) {
+                    const imgSrc = event.img ? `data:image/jpeg;base64,${event.img}` : 'img/default-image.png';
+                    rowContent += `
+                        <div class="col-md-2 ${offsetClass}">
+                            <center>
+                                <img src="${imgSrc}" class="cal-event-img">
+                                <p>${event.event_name}</p>
+                            </center>
+                        </div>
+                    `;
+                } else {
+                    rowContent += `
+                        <div class="col-md-2 ${offsetClass}">
+                            <center>
+                                <img src="img/default-image.png" class="cal-event-img">
+                                <p>&nbsp;</p>
+                            </center>
+                        </div>
+                    `;
+                }
+            }
+
             carouselItemContent += `
-                <div class="col-md-2 ${offsetClass}">
-                    <center>
-                        <img src="${imgSrc}" class="cal-event-img">
-                        <p>${event.event_name}</p>
-                    </center>
+                <div class="row">
+                    ${rowContent}
                 </div>
             `;
         }
@@ -65,9 +89,7 @@ function populateCarousel(events) {
         const carouselItem = $(`
             <div class="carousel-item ${isActive}">
                 <div class="container-fluid">
-                    <div class="row">
-                        ${carouselItemContent}
-                    </div>
+                    ${carouselItemContent}
                 </div>
             </div>
         `);
@@ -75,3 +97,4 @@ function populateCarousel(events) {
         carouselInner.append(carouselItem);
     }
 }
+
