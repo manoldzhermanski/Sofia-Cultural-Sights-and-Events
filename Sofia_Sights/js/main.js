@@ -1,205 +1,67 @@
-(function($) {
+document.addEventListener('DOMContentLoaded', function() {
+    var today = new Date();
+    var year = today.getFullYear();
+    var month = today.getMonth();
+    var day = today.getDate();
+    var monthTag = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
-    "use strict";
+    function drawHeader(day, month, year) {
+        var headDay = document.querySelector('.head-day');
+        var headMonth = document.querySelector('.head-month');
+        headDay.innerHTML = day;
+        headMonth.innerHTML = monthTag[month] + " - " + year;
+    }
 
-    document.addEventListener('DOMContentLoaded', function() {
-        var today = new Date(),
-            year = today.getFullYear(),
-            month = today.getMonth(),
-            monthTag = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
-            day = today.getDate(),
-            days = document.getElementsByTagName('td'),
-            selectedDay,
-            setDate,
-            daysLen = days.length;
+    function drawDays(year, month, selectedDay = null) {
+        var startDay = new Date(year, month, 1).getDay();
+        var nDays = new Date(year, month + 1, 0).getDate();
+        var n = startDay;
+        var days = document.querySelectorAll('#calendar td');
 
-        // Options should look like '2014-01-01'
-        function Calendar(selector, options) {
-            this.options = options;
-            this.draw();
+        for (var k = 0; k < days.length; k++) {
+            days[k].innerHTML = '';
+            days[k].id = '';
+            days[k].className = 'date-cell';
         }
 
-        Calendar.prototype.draw = function() {
-            this.getCookie('selected_day');
-            this.getOptions();
-            this.drawDays();
-            var that = this,
-                reset = document.getElementById('reset'),
-                pre = document.getElementsByClassName('pre-button'),
-                next = document.getElementsByClassName('next-button');
-
-            pre[0].addEventListener('click', function() { that.preMonth(); });
-            next[0].addEventListener('click', function() { that.nextMonth(); });
-            reset.addEventListener('click', function() { that.reset(); });
-            while (daysLen--) {
-                days[daysLen].addEventListener('click', function() { that.clickDay(this); });
-            }
-        };
-
-        Calendar.prototype.drawHeader = function(e) {
-            var headDay = document.getElementsByClassName('head-day'),
-                headMonth = document.getElementsByClassName('head-month');
-
-            e ? headDay[0].innerHTML = e : headDay[0].innerHTML = day;
-            headMonth[0].innerHTML = monthTag[month] + " - " + year;
-        };
-
-        Calendar.prototype.drawDays = function() {
-            var startDay = new Date(year, month, 1).getDay(),
-                nDays = new Date(year, month + 1, 0).getDate(),
-                n = startDay;
-
-            for (var k = 0; k < 42; k++) {
-                days[k].innerHTML = '';
-                days[k].id = '';
-                days[k].className = '';
-            }
-
-            for (var i = 1; i <= nDays; i++) {
-                days[n].innerHTML = i;
-                n++;
-            }
-
-            for (var j = 0; j < 42; j++) {
-                if (days[j].innerHTML === "") {
-                    days[j].id = "disabled";
-                } else if (j === day + startDay - 1) {
-                    if ((this.options && (month === setDate.getMonth()) && (year === setDate.getFullYear())) || (!this.options && (month === today.getMonth()) && (year === today.getFullYear()))) {
-                        this.drawHeader(day);
-                        days[j].id = "today";
-                    }
-                }
-                if (selectedDay) {
-                    if ((j === selectedDay.getDate() + startDay - 1) && (month === selectedDay.getMonth()) && (year === selectedDay.getFullYear())) {
-                        days[j].className = "selected";
-                        this.drawHeader(selectedDay.getDate());
-                    }
-                }
-            }
-        };
-
-        Calendar.prototype.clickDay = function(o) {
-            var selected = document.getElementsByClassName("selected"),
-                len = selected.length;
-            if (len !== 0) {
-                selected[0].className = "";
-            }
-            o.className = "selected";
-            selectedDay = new Date(year, month, o.innerHTML);
-            this.drawHeader(o.innerHTML);
-            this.setCookie('selected_day', 1);
-        };
-
-        Calendar.prototype.preMonth = function() {
-            if (month < 1) {
-                month = 11;
-                year = year - 1;
-            } else {
-                month = month - 1;
-            }
-            this.drawHeader(1);
-            this.drawDays();
-        };
-
-        Calendar.prototype.nextMonth = function() {
-            if (month >= 11) {
-                month = 0;
-                year = year + 1;
-            } else {
-                month = month + 1;
-            }
-            this.drawHeader(1);
-            this.drawDays();
-        };
-
-        Calendar.prototype.getOptions = function() {
-            if (this.options) {
-                var sets = this.options.split('-');
-                setDate = new Date(sets[0], sets[1] - 1, sets[2]);
-                day = setDate.getDate();
-                year = setDate.getFullYear();
-                month = setDate.getMonth();
-            }
-        };
-
-        Calendar.prototype.reset = function() {
-            month = today.getMonth();
-            year = today.getFullYear();
-            day = today.getDate();
-            this.options = undefined;
-            this.drawHeader(day);
-            this.drawDays();
-        };
-
-        Calendar.prototype.setCookie = function(name, expiredays) {
-            if (expiredays) {
-                var date = new Date();
-                date.setTime(date.getTime() + (expiredays * 24 * 60 * 60 * 1000));
-                var expires = "; expires=" + date.toGMTString();
-            } else {
-                var expires = "";
-            }
-            document.cookie = name + "=" + selectedDay + expires + "; path=/";
-        };
-
-        Calendar.prototype.getCookie = function(name) {
-            if (document.cookie.length) {
-                var arrCookie = document.cookie.split(';'),
-                    nameEQ = name + "=";
-                for (var i = 0, cLen = arrCookie.length; i < cLen; i++) {
-                    var c = arrCookie[i];
-                    while (c.charAt(0) == ' ') {
-                        c = c.substring(1, c.length);
-                    }
-                    if (c.indexOf(nameEQ) === 0) {
-                        selectedDay = new Date(c.substring(nameEQ.length, c.length));
-                    }
-                }
-            }
-        };
-
-        var calendar = new Calendar();
-        
-        function showToday() {
-            var today = new Date();
-            var day = today.getDate();
-            var month = today.getMonth();
-            var year = today.getFullYear();
-            var startDay = new Date(year, month, 1).getDay();
-            var nDays = new Date(year, month + 1, 0).getDate();
-            var n = startDay;
-            var days = document.getElementsByTagName('td');
-            var daysLen = days.length;
-
-            // Reset the calendar header to today's date
-            calendar.drawHeader(day);
-            
-            // Clear all previous selections
-            for (var k = 0; k < 42; k++) {
-                days[k].innerHTML = '';
-                days[k].id = '';
-                days[k].className = '';
-            }
-
-            // Fill the calendar with days
-            for (var i = 1; i <= nDays; i++) {
-                days[n].innerHTML = i;
-                n++;
-            }
-
-            // Highlight today's date
-            for (var j = 0; j < 42; j++) {
-                if (days[j].innerHTML === "") {
-                    days[j].id = "disabled";
-                } else if (j === day + startDay - 1) {
-                    days[j].id = "today";
-                    days[j].className = "selected";
-                }
-            }
+        for (var i = 1; i <= nDays; i++) {
+            days[n].innerHTML = i;
+            days[n].addEventListener('click', function() {
+                selectDate(this, year, month);
+            });
+            n++;
         }
 
-        // Attach the showToday function to the "Today" button
-        document.getElementById('reset').addEventListener('click', showToday);
-    }, false);
+        for (var j = 0; j < days.length; j++) {
+            if (days[j].innerHTML == "") {
+                days[j].id = "disabled";
+            } else if (selectedDay && days[j].innerHTML == selectedDay.toString()) {
+                days[j].id = "selected";
+                days[j].className = "selected";
+            } else if (!selectedDay && j === day + startDay - 1) {
+                days[j].id = "today";
+                days[j].className = "selected";
+            }
+        }
+    }
 
-})(jQuery);
+    function showToday() {
+        var today = new Date();
+        var year = today.getFullYear();
+        var month = today.getMonth();
+        var day = today.getDate();
+        drawHeader(day, month, year);
+        drawDays(year, month, day);
+    }
+
+    function selectDate(cell, year, month) {
+        var selectedDay = cell.innerHTML;
+        drawHeader(selectedDay, month, year);
+        drawDays(year, month, selectedDay);
+    }
+
+    document.getElementById('reset').addEventListener('click', showToday);
+
+    // Initially show today's date when the calendar loads
+    showToday();
+}, false);
