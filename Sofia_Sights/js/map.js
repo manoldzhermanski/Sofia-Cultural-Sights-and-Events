@@ -39,7 +39,7 @@ fetch('http://localhost:3000/galleries')
 .then(data => {
     data.galleries.forEach(point => {
         var marker = L.marker([point.latitude, point.longitude], { icon: galleryIcon })
-            .bindPopup(point.gallery); // Assuming your table has a 'name' column
+            .bindPopup(point.name); // Assuming your table has a 'name' column
         galleryLayer.addLayer(marker);
     });
     galleryLayer.addTo(map); // Add galleryLayer to the map after loading
@@ -51,7 +51,7 @@ fetch('http://localhost:3000/theatres')
 .then(data => {
     data.theatres.forEach(point => {
         var marker = L.marker([point.latitude, point.longitude], { icon: theatreIcon })
-            .bindPopup(point.theatre); // Assuming your table has a 'name' column
+            .bindPopup(point.name); // Assuming your table has a 'name' column
         theatreLayer.addLayer(marker);
     });
     theatreLayer.addTo(map); // Add theatreLayer to the map after loading
@@ -63,12 +63,79 @@ fetch('http://localhost:3000/museums')
 .then(data => {
     data.museums.forEach(point => {
         var marker = L.marker([point.latitude, point.longitude], { icon: museumIcon })
-            .bindPopup(point.museum); // Assuming your table has a 'name' column
+            .bindPopup(point.name); // Assuming your table has a 'name' column
         museumLayer.addLayer(marker);
     });
     museumLayer.addTo(map); // Add museumLayer to the map after loading
 });
 
+// Function to fetch and add markers for a specific host type
+function fetchLocationDetails(event, icon, layer) {
+    let url;
+    let property;
+
+    if (event.host_type === 'gallery') {
+        url = `http://localhost:3000/galleries`;
+        property = 'galleries';
+    } else if (event.host_type === 'theatre') {
+        url = `http://localhost:3000/theatres`;
+        property = 'theatres';
+    } else if (event.host_type === 'museum') {
+        url = `http://localhost:3000/museums`;
+        property = 'museums';
+    }
+
+    if (url) {
+        fetch(url)
+            .then(response => response.json())
+            .then(data => {
+                if (data) {
+                    let locations = data[property];
+                    let location = locations.find(loc => loc.name === event.hosted_by || loc.name === event.hosted_by);
+                    if (location) {
+                        let marker = L.marker([location.latitude, location.longitude], { icon: icon })
+                            .bindPopup(location.name);
+                        layer.addLayer(marker);
+                    }
+                } else {
+                    console.error(`Property ${property} not found in response data`);
+                }
+            })
+            .catch(error => console.error('Error fetching location details:', error));
+    }
+}
+
+// Function to update map markers based on events
+function updateMapWithEvents(events) {
+    // Clear existing layers
+    galleryLayer.clearLayers();
+    theatreLayer.clearLayers();
+    museumLayer.clearLayers();
+
+    // Process each event and fetch location details
+    events.forEach(event => {
+        if (event.host_type === 'gallery') {
+            fetchLocationDetails(event, galleryIcon, galleryLayer);
+        } else if (event.host_type === 'theatre') {
+            fetchLocationDetails(event, theatreIcon, theatreLayer);
+        } else if (event.host_type === 'museum') {
+            fetchLocationDetails(event, museumIcon, museumLayer);
+        }
+    });
+
+    // Show relevant layers on the map
+    if (galleryLayer.getLayers().length > 0) map.addLayer(galleryLayer);
+    if (theatreLayer.getLayers().length > 0) map.addLayer(theatreLayer);
+    if (museumLayer.getLayers().length > 0) map.addLayer(museumLayer);
+
+    // Fit map to markers
+    setTimeout(() => {
+        let allMarkers = L.featureGroup([...galleryLayer.getLayers(), ...theatreLayer.getLayers(), ...museumLayer.getLayers()]);
+        if (allMarkers.getLayers().length > 0) {
+            map.fitBounds(allMarkers.getBounds());
+        }
+    }, 500); // Add a delay to ensure all markers are added before fitting bounds
+}
 var currentLayer = null;
 
 // Function to toggle marker visibility by category

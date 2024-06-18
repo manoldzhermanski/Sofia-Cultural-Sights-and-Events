@@ -21,6 +21,7 @@ function fetchEvents(selectedDate, monthYear) {
         success: function(response) {
             console.log('Events fetched:', response);
             populateCarousel(response.activeEvents);
+            updateMapWithEvents(response.activeEvents)
         },
         error: function(err) {
             console.error('Error fetching events:', err);
