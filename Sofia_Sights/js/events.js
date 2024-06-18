@@ -9,10 +9,6 @@ $(document).ready(function(){
 
 function fetchEvents(selectedDate, monthYear) {
     const [month, year] = monthYear.split(' - ');
-    console.log(month);
-    console.log(year);
-    console.log(selectedDate);
-    console.log(monthYear);
     const fullDate = `${year}-${getMonthNumber(month)}-${selectedDate.padStart(2, '0')}`;
 
     console.log('Full date:', fullDate);

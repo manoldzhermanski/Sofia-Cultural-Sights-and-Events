@@ -143,7 +143,7 @@ function updateMapWithEvents(events) {
         if (allMarkers.getLayers().length > 0) {
             map.fitBounds(allMarkers.getBounds());
         }
-    }, 500); // Add a delay to ensure all markers are added before fitting bounds
+    }, 250); // Add a delay to ensure all markers are added before fitting bounds
 }
 
 var currentLayer = null;
@@ -231,7 +231,7 @@ function toggleMarkers(category) {
         if (allMarkers.getLayers().length > 0) {
             map.fitBounds(allMarkers.getBounds());
         }
-    }, 500); // Add a delay to ensure all markers are added before fitting bounds
+    }, 250); // Add a delay to ensure all markers are added before fitting bounds
 }
 
 // Function to show all markers
@@ -247,7 +247,7 @@ function showAllMarkers() {
         if (allMarkers.getLayers().length > 0) {
             map.fitBounds(allMarkers.getBounds());
         }
-    }, 500); // Add a delay to ensure all markers are added before fitting bounds
+    }, 250); // Add a delay to ensure all markers are added before fitting bounds
 }
 
 // Initial load of all markers
