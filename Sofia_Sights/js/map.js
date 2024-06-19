@@ -1,9 +1,10 @@
 // Initialize the map
 var map = L.map('map').setView([42.6977, 23.3219], 13);
 
-// Add OpenStreetMap tiles
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+    subdomains: 'abcd',
+    maxZoom: 19
 }).addTo(map);
 
 // Custom marker icons
@@ -136,14 +137,14 @@ function updateMapWithEvents(events) {
     if (eventGalleryLayer.getLayers().length > 0) map.addLayer(eventGalleryLayer);
     if (eventTheatreLayer.getLayers().length > 0) map.addLayer(eventTheatreLayer);
     if (eventMuseumLayer.getLayers().length > 0) map.addLayer(eventMuseumLayer);
-
+/*
     // Fit map to markers
     setTimeout(() => {
         let allMarkers = L.featureGroup([...eventGalleryLayer.getLayers(), ...eventTheatreLayer.getLayers(), ...eventMuseumLayer.getLayers()]);
         if (allMarkers.getLayers().length > 0) {
             map.fitBounds(allMarkers.getBounds());
         }
-    }, 250); // Add a delay to ensure all markers are added before fitting bounds
+    }, 200); // Add a delay to ensure all markers are added before fitting bounds*/
 }
 
 var currentLayer = null;
@@ -224,14 +225,14 @@ function toggleMarkers(category) {
         fetchCategoryMarkers(category);
         currentLayer = layer;
     }
-
+/*
     // Fit map to markers
     setTimeout(() => {
         let allMarkers = L.featureGroup([...galleryLayer.getLayers(), ...theatreLayer.getLayers(), ...museumLayer.getLayers()]);
         if (allMarkers.getLayers().length > 0) {
             map.fitBounds(allMarkers.getBounds());
         }
-    }, 250); // Add a delay to ensure all markers are added before fitting bounds
+    }, 200); // Add a delay to ensure all markers are added before fitting bounds*/
 }
 
 // Function to show all markers
@@ -240,14 +241,14 @@ function showAllMarkers() {
     fetchCategoryMarkers('theatres');
     fetchCategoryMarkers('museums');
     currentLayer = null;
-
+/*
     // Fit map to markers
     setTimeout(() => {
         let allMarkers = L.featureGroup([...galleryLayer.getLayers(), ...theatreLayer.getLayers(), ...museumLayer.getLayers()]);
         if (allMarkers.getLayers().length > 0) {
             map.fitBounds(allMarkers.getBounds());
         }
-    }, 250); // Add a delay to ensure all markers are added before fitting bounds
+    }, 200); // Add a delay to ensure all markers are added before fitting bounds*/
 }
 
 // Initial load of all markers
